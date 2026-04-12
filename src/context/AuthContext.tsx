@@ -16,7 +16,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = 'https://barakahx-study-platform-ultimate.onrender.com/api';
 
 // Hardcoded admin credentials
 const ADMIN_EMAIL = 'admin@barakahx.com';
