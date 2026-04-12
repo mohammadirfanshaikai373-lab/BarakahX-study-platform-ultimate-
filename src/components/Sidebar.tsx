@@ -79,7 +79,9 @@ const Sidebar = () => {
           </div>
           <div className="overflow-hidden">
             <p className="text-sm font-medium text-white truncate">{user?.name}</p>
-            <p className="text-[10px] text-gray-500 uppercase">{user?.role}</p>
+            <p className="text-[10px] text-gray-500 uppercase">
+              {isAdmin ? 'Admin' : 'User'}
+            </p>
           </div>
         </div>
         <button

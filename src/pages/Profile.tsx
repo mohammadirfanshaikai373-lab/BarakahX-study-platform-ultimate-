@@ -2,7 +2,8 @@ import { useAuth } from '../context/AuthContext';
 import { User, Mail, Shield, Settings, Bell, Lock } from 'lucide-react';
 
 const Profile = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
+  const userRole = isAdmin ? 'Admin' : 'User';
 
   return (
     <div className="max-w-4xl mx-auto">
@@ -41,7 +42,7 @@ const Profile = () => {
               <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 ml-1">Role</label>
               <div className="bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-emerald-500 flex items-center gap-3 font-bold">
                 <Shield size={18} className="text-emerald-500/50" />
-                {user?.role.toUpperCase()}
+                {userRole.toUpperCase()}
               </div>
             </div>
           </div>
