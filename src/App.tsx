@@ -4,7 +4,6 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { Layout } from './components/Layout';
 import { Scene3D } from './components/Scene3D';
 
-
 // Lazy load pages for performance
 const Login = lazy(() => import('./pages/Login'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -16,6 +15,8 @@ const English = lazy(() => import('./pages/English'));
 const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Admin = lazy(() => import('./pages/Admin'));
+
+const API_URL = 'https://barakahx-study-platform-ultimate.onrender.com/api';
 
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({ 
   children, 
@@ -40,15 +41,15 @@ const LoadingScreen = () => (
 
 function App() {
   useEffect(() => {
-    fetch('http://localhost:5000/api/hello')
+    fetch(`${API_URL}/hello`)
       .then(res => res.json())
       .then(data => console.log('Backend says:', data.message))
       .catch(err => console.error('Backend error:', err));
   }, []);
+
   return (
     <AuthProvider>
       <Router>
-        {/* 3D background now lives at the top level so it never disappears */}
         <Scene3D />
 
         <Suspense fallback={<LoadingScreen />}>
@@ -98,7 +99,6 @@ function App() {
       </Router>
     </AuthProvider>
   );
-  
 }
 
 export default App;
