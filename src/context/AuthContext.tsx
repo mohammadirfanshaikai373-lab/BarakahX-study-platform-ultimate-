@@ -10,6 +10,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => void;
   isAdmin: boolean;
 }
@@ -35,13 +36,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // For hardcoded admin token
       if (token === 'hardcoded-admin-token') {
         setUser(ADMIN_USER);
         return;
       }
-
-      // Otherwise verify with backend
       fetch(`${API_URL}/profile`, {
         headers: { Authorization: `Bearer ${token}` }
       })
@@ -57,6 +55,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
+  const register = async (email: string, password: string, name: string) => {
+    const response = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, name })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Registration failed');
+    }
+
+    localStorage.setItem('token', data.token);
+    setUser(data.user);
+  };
+
   const login = async (email: string, password: string) => {
     // Check hardcoded admin credentials first
     if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
@@ -65,7 +80,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    // Otherwise attempt normal backend login
     const response = await fetch(`${API_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -90,7 +104,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const isAdmin = user?.isAdmin || false;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isAdmin }}>
+    <AuthContext.Provider value={{ user, login, register, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

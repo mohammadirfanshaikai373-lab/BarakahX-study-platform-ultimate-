@@ -5,11 +5,11 @@ import { motion } from 'framer-motion';
 import { LogIn, UserPlus } from 'lucide-react';
 
 const Login = () => {
-  const { login, user } = useAuth();
+  const { login, register, user } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [name, setName] = useState('');        // only needed for registration
+  const [name, setName] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -25,21 +25,11 @@ const Login = () => {
         // LOGIN
         await login(email, password);
       } else {
-        // REGISTER
-        const response = await fetch('http://localhost:5000/api/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password, name })
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Registration failed');
-        }
-
-        // After successful registration, automatically log the user in
-        await login(email, password);
+        // REGISTER (using context)
+        await register(email, password, name);
+        // Optionally auto‑login after registration – your backend returns token,
+        // so the register function already sets user and token.
+        // No need to call login again.
       }
     } catch (err: any) {
       setError(err.message);
@@ -125,8 +115,8 @@ const Login = () => {
           <button 
             onClick={() => {
               setIsLogin(!isLogin);
-              setError('');      // clear errors when switching
-              setName('');       // reset name field
+              setError('');
+              setName('');
             }}
             className="text-sm text-gray-500 hover:text-emerald-400 transition-colors"
           >
