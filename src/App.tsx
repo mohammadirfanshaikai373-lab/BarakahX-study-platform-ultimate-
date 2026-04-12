@@ -16,8 +16,6 @@ const Portfolio = lazy(() => import('./pages/Portfolio'));
 const Profile = lazy(() => import('./pages/Profile'));
 const Admin = lazy(() => import('./pages/Admin'));
 
-const API_URL = 'https://barakahx-study-platform-ultimate.onrender.com/api';
-
 const ProtectedRoute: React.FC<{ children: React.ReactNode; adminOnly?: boolean }> = ({ 
   children, 
   adminOnly = false 
@@ -40,7 +38,9 @@ const LoadingScreen = () => (
 );
 
 function App() {
+  // Optional: test backend connection (remove if not needed)
   useEffect(() => {
+    const API_URL = 'https://barakahx-study-platform-ultimate.onrender.com/api';
     fetch(`${API_URL}/hello`)
       .then(res => res.json())
       .then(data => console.log('Backend says:', data.message))
@@ -51,47 +51,18 @@ function App() {
     <AuthProvider>
       <Router>
         <Scene3D />
-
         <Suspense fallback={<LoadingScreen />}>
           <Routes>
             <Route path="/login" element={<Login />} />
-            
-            <Route path="/dashboard" element={
-              <ProtectedRoute><Dashboard /></ProtectedRoute>
-            } />
-            
-            <Route path="/resources" element={
-              <ProtectedRoute><Resources /></ProtectedRoute>
-            } />
-            
-            <Route path="/doubts" element={
-              <ProtectedRoute><Doubts /></ProtectedRoute>
-            } />
-            
-            <Route path="/mentor" element={
-              <ProtectedRoute><Mentor /></ProtectedRoute>
-            } />
-            
-            <Route path="/alerts" element={
-              <ProtectedRoute><Alerts /></ProtectedRoute>
-            } />
-            
-            <Route path="/english" element={
-              <ProtectedRoute><English /></ProtectedRoute>
-            } />
-            
-            <Route path="/portfolio" element={
-              <ProtectedRoute><Portfolio /></ProtectedRoute>
-            } />
-            
-            <Route path="/profile" element={
-              <ProtectedRoute><Profile /></ProtectedRoute>
-            } />
-            
-            <Route path="/admin" element={
-              <ProtectedRoute adminOnly><Admin /></ProtectedRoute>
-            } />
-
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/resources" element={<ProtectedRoute><Resources /></ProtectedRoute>} />
+            <Route path="/doubts" element={<ProtectedRoute><Doubts /></ProtectedRoute>} />
+            <Route path="/mentor" element={<ProtectedRoute><Mentor /></ProtectedRoute>} />
+            <Route path="/alerts" element={<ProtectedRoute><Alerts /></ProtectedRoute>} />
+            <Route path="/english" element={<ProtectedRoute><English /></ProtectedRoute>} />
+            <Route path="/portfolio" element={<ProtectedRoute><Portfolio /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/admin" element={<ProtectedRoute adminOnly><Admin /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
